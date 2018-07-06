@@ -44,3 +44,17 @@ class TestFeatures(unittest.TestCase):
     @utils.with_features()
     def test_with_features_decorator_when_empty(self):
         self.assertEqual(self.f.available_flags, dict())
+
+    def test_decorator_pos_argument_passthrough(self):
+        @utils.with_features(something=True)
+        def scoped_func(arg_a, arg_b):
+            return f"{arg_a} + {arg_b} is {self.f.get('something')}"
+
+        self.assertEqual(scoped_func('opt1', 'opt2'), 'opt1 + opt2 is True')
+
+    def test_decorator_kw_argument_passthrough(self):
+        @utils.with_features(something=True)
+        def scoped_func(name=None):
+            return f"{name} is {self.f.get('something')}"
+
+        self.assertEqual(scoped_func(name='Gunnar'), 'Gunnar is True')

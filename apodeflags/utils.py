@@ -6,13 +6,13 @@ def with_features(**flags):
     flag configuration
     """
     def with_features_decorator(func):
-        def func_wrapper(self):
+        def func_wrapper(*args, **kwargs):
             with patch.object(
                 features.Features,
                 'available_flags',
                 new_callable=PropertyMock
             ) as method:
                 method.return_value = flags
-                return func(self)
+                return func(*args, **kwargs)
         return func_wrapper
     return with_features_decorator
